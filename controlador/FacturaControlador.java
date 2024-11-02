@@ -40,10 +40,18 @@ public class FacturaControlador extends HttpServlet {
     protected void Facturar(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         response.setContentType("text/html;charset=UTF-8");
+
+        int clienteId = Integer.parseInt(request.getParameter("id")); 
+        ArrayList<DetalleCliente> clienteDatos = clidao.BuscarDatos(clienteId);
         
-        request.getRequestDispatcher(PagFactura).forward(request, response);
-        
+        if (!clienteDatos.isEmpty()) {
+            request.setAttribute("clienteDatos", clienteDatos.get(0)); 
+            request.getRequestDispatcher(PagFactura).forward(request, response);
+        } else {
+            response.sendError(HttpServletResponse.SC_NOT_FOUND, "Cliente no encontrado");
+        }
     }
+        
     
     protected void mostrarDatos(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
