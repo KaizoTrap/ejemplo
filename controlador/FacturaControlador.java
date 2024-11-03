@@ -6,13 +6,18 @@ import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import java.util.ArrayList;
+import modelo.DetalleCliente;
 import modelo.dao.ClienteDAO;
+import util.Carrito;
+import modelo.DetallePedido;
 
 
 public class FacturaControlador extends HttpServlet {
     
     private String PagFactura = "insertar pagina de factura.jsp";
     private ClienteDAO clidao = new ClienteDAO();
+    private Carrito objCarrito = new Carrito();
 
     
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
@@ -40,11 +45,19 @@ public class FacturaControlador extends HttpServlet {
     protected void Facturar(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         response.setContentType("text/html;charset=UTF-8");
-
-        int clienteId = Integer.parseInt(request.getParameter("id")); 
-        ArrayList<DetalleCliente> clienteDatos = clidao.BuscarDatos(clienteId);
         
-        if (obj != null) {
+        request.getRequestDispatcher(PagFactura).forward(request, response);
+        
+    }
+    
+    protected void mostrarDatos(HttpServletRequest request, HttpServletResponse response)
+            throws ServletException, IOException {
+        response.setContentType("text/html;charset=UTF-8");
+        
+         int clienteId = Integer.parseInt(request.getParameter("id")); 
+         ArrayList<DetalleCliente> clienteDatos = clidao.BuscarDatos(clienteId);
+        
+        if (!clienteDatos.isEmpty()) {
             ArrayList<DetallePedido> lista = objCarrito.ObtenerSesion(request);
             request.setAttribute("clienteDatos", clienteDatos.get(0)); 
             request.setAttribute("carrito", lista);
@@ -53,14 +66,6 @@ public class FacturaControlador extends HttpServlet {
         } else {
             response.sendError(HttpServletResponse.SC_NOT_FOUND, "Cliente no encontrado");
         }
-    }
-        
-    
-    protected void mostrarDatos(HttpServletRequest request, HttpServletResponse response)
-            throws ServletException, IOException {
-        response.setContentType("text/html;charset=UTF-8");
-        
-        request.getRequestDispatcher(PagFactura).forward(request, response);
         
     }
     
