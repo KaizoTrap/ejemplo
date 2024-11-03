@@ -45,7 +45,10 @@ public class FacturaControlador extends HttpServlet {
         ArrayList<DetalleCliente> clienteDatos = clidao.BuscarDatos(clienteId);
         
         if (!clienteDatos.isEmpty()) {
+            ArrayList<DetallePedido> lista = objCarrito.ObtenerSesion(request);
             request.setAttribute("clienteDatos", clienteDatos.get(0)); 
+            request.setAttribute("carrito", lista);
+            request.setAttribute("total", objCarrito.ImporteTotal(lista)); 
             request.getRequestDispatcher(PagFactura).forward(request, response);
         } else {
             response.sendError(HttpServletResponse.SC_NOT_FOUND, "Cliente no encontrado");
