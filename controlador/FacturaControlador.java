@@ -44,7 +44,7 @@ public class FacturaControlador extends HttpServlet {
         int clienteId = Integer.parseInt(request.getParameter("id")); 
         ArrayList<DetalleCliente> clienteDatos = clidao.BuscarDatos(clienteId);
         
-        if (!clienteDatos.isEmpty()) {
+        if (obj != null) {
             ArrayList<DetallePedido> lista = objCarrito.ObtenerSesion(request);
             request.setAttribute("clienteDatos", clienteDatos.get(0)); 
             request.setAttribute("carrito", lista);
